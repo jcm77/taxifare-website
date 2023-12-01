@@ -1,7 +1,12 @@
 import streamlit as st
+from streamlit_folium import folium_static
+
 import requests
 import datetime
 import pandas as pd
+
+import folium
+import os
 
 '''
 # TaxiFareModel front
@@ -58,3 +63,27 @@ if st.button('Get fare'):
     st.write(f"Your estimated fare is: {round(response['fare'],2)} USD.")
 else:
     st.write('Please enter full data and make request.')
+
+
+# Plotting the NYC map, pickup and ddropoff place
+
+map = folium.Map(location=[40.7614327, -73.9798156], zoom_start=10, control_scale=True)
+
+# geojson_path = os.path.join('data', 'New York.geo.json')
+pickup_place = [pickup_long,pickup_lat]
+dropoff_place = [dropoff_long, dropoff_lat ]
+
+# Pickup marker
+folium.Marker(
+    location=pickup_place,
+    popup='Pickup',
+    icon=folium.Icon(color="blue", icon='info-sign'),
+    ).add_to(map)
+
+# Dropoff marker
+folium.Marker(
+    location=dropoff_place,
+    popup='Dropoff',
+    icon=folium.Icon(color="red", icon='info-sign'),
+    ).add_to(map)
+folium_static(map)
